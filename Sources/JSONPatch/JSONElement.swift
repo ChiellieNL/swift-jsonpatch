@@ -444,7 +444,7 @@ extension JSONElement {
     ///
     /// - Parameters:
     ///   - operation: The operation to apply.
-    public mutating func apply(_ operation: JSONPatch.Operation, options: [JSONPatch.ApplyOption] = []) throws {
+    public mutating func apply(_ operation: JSONPatch.Operation, options: [JSONPatch.ApplyOption] = JSONPatch.ApplyOption.defaults) throws {
         do {
             switch operation {
             case let .add(path, value):
@@ -473,7 +473,7 @@ extension JSONElement {
     ///   - patch: The json-patch to be applied.
     ///   - options: The options for applying the patch.
     public mutating func apply(patch: JSONPatch,
-                               options: [JSONPatch.ApplyOption] = []) throws {
+                               options: [JSONPatch.ApplyOption] = JSONPatch.ApplyOption.defaults) throws {
         var path: JSONPointer? = nil
         for case let .relative(pointer) in options {
             path = pointer

@@ -44,6 +44,10 @@ public class JSONPatch: Codable {
         /// Can be used to apply the patch to sub-element within the json document. Using this option will cause the patch process to
         /// treat the specified json element as the root element while applying the patch.
         case relative(to: JSONPointer)
+
+        public static var defaults: [ApplyOption] {
+            return [.ignoreNonexistentValues]
+        }
     }
 
     /// A representation of the supported operations json-patch.
@@ -141,7 +145,7 @@ public class JSONPatch: Codable {
     ///   - options: The options to be used when applying the patch.
     /// - Returns: A transformed json document with the patch applied.
     public func apply(to jsonObject: Any,
-                      options: [ApplyOption] = []) throws -> Any {
+                      options: [ApplyOption] = ApplyOption.defaults) throws -> Any {
         var jsonDocument = try JSONElement(any: jsonObject)
         if options.contains(.applyOnCopy) {
             jsonDocument = try jsonDocument.copy()
@@ -175,7 +179,7 @@ public class JSONPatch: Codable {
     public func apply(to jsonObject: Any,
                       relativeTo path: JSONPointer? = nil,
                       inplace: Bool) throws -> Any {
-        var options: [ApplyOption] = []
+        var options: [ApplyOption] = ApplyOption.defaults
         if let path = path {
             options.append(.relative(to: path))
         }
@@ -199,7 +203,7 @@ public class JSONPatch: Codable {
     public func apply(to data: Data,
                       readingOptions: JSONSerialization.ReadingOptions = [.mutableContainers],
                       writingOptions: JSONSerialization.WritingOptions = [],
-                      applyingOptions: [JSONPatch.ApplyOption] = []) throws -> Data {
+                      applyingOptions: [JSONPatch.ApplyOption] = ApplyOption.defaults) throws -> Data {
         let jsonObject = try JSONSerialization.jsonObject(with: data,
                                                           options: readingOptions)
         var jsonElement = try JSONElement(any: jsonObject)
@@ -226,7 +230,7 @@ public class JSONPatch: Codable {
                       relativeTo path: JSONPointer?,
                       readingOptions: JSONSerialization.ReadingOptions = [.mutableContainers],
                       writingOptions: JSONSerialization.WritingOptions = []) throws -> Data {
-        var applyingOptions: [ApplyOption] = []
+        var applyingOptions: [ApplyOption] = ApplyOption.defaults
         if let path = path {
             applyingOptions.append(.relative(to: path))
         }

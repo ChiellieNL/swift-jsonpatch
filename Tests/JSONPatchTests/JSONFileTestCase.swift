@@ -89,7 +89,7 @@ class JSONFileTestCase: XCTestCase {
 
         do {
             let jsonPatch = try JSONPatch(jsonArray: patch)
-            let result = try jsonPatch.apply(to: doc)
+            let result = try jsonPatch.apply(to: doc, options: [])
 
             if let expected = testJson["expected"] {
                 guard (result as? NSObject)?.isEqual(expected) ?? false else {
